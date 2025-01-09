@@ -176,7 +176,7 @@
                 card1.classList.add('matched');
                 card2.classList.add('matched');
                 
-                // Remover las cartas después de la animación
+                // Remover las cartas después de la animación solo si hay coincidencia
                 setTimeout(() => {
                     card1.style.display = 'none';
                     card2.style.display = 'none';
@@ -190,11 +190,16 @@
                     setTimeout(() => alert('¡Felicitaciones! Has completado el juego en ' + 
                         document.getElementById('timer').textContent + ' segundos.'), 500);
                 }
+            } else {
+                // Si no hay coincidencia, solo quitar la selección
+                setTimeout(() => {
+                    card1.classList.remove('selected');
+                    card2.classList.remove('selected');
+                }, 1000);
             }
 
+            // Limpiar las cartas seleccionadas después de un tiempo
             setTimeout(() => {
-                card1.classList.remove('selected');
-                card2.classList.remove('selected');
                 selectedCards = [];
             }, 1000);
         }
