@@ -168,38 +168,42 @@
 
         function checkMatch() {
             const [card1, card2] = selectedCards;
-            const match = card1.dataset.concept === card2.dataset.definition || 
-                         card2.dataset.concept === card1.dataset.definition;
-
-            if (match) {
-                matchSound.play();
-                card1.classList.add('matched');
-                card2.classList.add('matched');
+            
+            // Verificar si una carta es concepto y la otra definición
+            const isCard1Concept = card1.dataset.concept !== undefined;
+            const isCard2Concept = card2.dataset.concept !== undefined;
+            
+            // Solo proceder si una es concepto y la otra definición
+            if (isCard1Concept !== isCard2Concept) {
+                const conceptCard = isCard1Concept ? card1 : card2;
+                const definitionCard = isCard1Concept ? card2 : card1;
                 
-                // Remover las cartas después de la animación solo si hay coincidencia
-                setTimeout(() => {
-                    card1.style.display = 'none';
-                    card2.style.display = 'none';
-                }, 500);
+                if (conceptCard.dataset.concept === definitionCard.dataset.definition) {
+                    // Coincidencia correcta
+                    matchSound.play();
+                    conceptCard.classList.add('matched');
+                    definitionCard.classList.add('matched');
+                    
+                    setTimeout(() => {
+                        conceptCard.style.display = 'none';
+                        definitionCard.style.display = 'none';
+                    }, 500);
 
-                matchedPairs++;
-                document.getElementById('matches').textContent = matchedPairs;
-                
-                if (matchedPairs === pairs.length) {
-                    clearInterval(timerInterval);
-                    setTimeout(() => alert('¡Felicitaciones! Has completado el juego en ' + 
-                        document.getElementById('timer').textContent + ' segundos.'), 500);
+                    matchedPairs++;
+                    document.getElementById('matches').textContent = matchedPairs;
+                    
+                    if (matchedPairs === pairs.length) {
+                        clearInterval(timerInterval);
+                        setTimeout(() => alert('¡Felicitaciones! Has completado el juego en ' + 
+                            document.getElementById('timer').textContent + ' segundos.'), 500);
+                    }
                 }
-            } else {
-                // Si no hay coincidencia, solo quitar la selección
-                setTimeout(() => {
-                    card1.classList.remove('selected');
-                    card2.classList.remove('selected');
-                }, 1000);
             }
-
-            // Limpiar las cartas seleccionadas después de un tiempo
+            
+            // Si no hay coincidencia o son del mismo tipo, solo quitar la selección
             setTimeout(() => {
+                card1.classList.remove('selected');
+                card2.classList.remove('selected');
                 selectedCards = [];
             }, 1000);
         }
